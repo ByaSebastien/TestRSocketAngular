@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {RSocketService} from "./services/rsocket.service";
+import {Message} from "./models/message";
 
 @Component({
   selector: 'app-root',
