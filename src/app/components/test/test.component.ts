@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Message} from "../../models/message";
+import {SimpleMessage} from "../../models/simple-message";
 import {RSocketService} from "../../services/rsocket.service";
 
 @Component({
@@ -9,14 +9,19 @@ import {RSocketService} from "../../services/rsocket.service";
 })
 export class TestComponent {
 
-  response: Message |undefined;
+  response: SimpleMessage |undefined;
 
-  constructor(private rsocketService: RSocketService) {}
+  constructor(private rsocketService: RSocketService) {
+    this.rsocketService.$messageSubject.subscribe((e: SimpleMessage) => {
+      this.response = e;
+    });
+  }
 
   sendMessage() {
-    this.rsocketService.sendMessage('Hello RSocket').subscribe({
-      next: (data) => { this.response = data; },
-      error: (error) => { console.error('Erreur RSocket', error); }
-    });
+    this.rsocketService.sendMessage('Hello RSocket');
+  }
+
+  connect(){
+    this.rsocketService.connect();
   }
 }

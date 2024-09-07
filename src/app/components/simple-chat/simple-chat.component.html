@@ -1,0 +1,10 @@
+<div>
+  <button (click)="connect()">Connect</button>
+  <button (click)="subscribe()">Subscribe</button>
+</div>
+<input [(ngModel)]="newMessage" placeholder="Type a message">  <!-- Champ texte -->
+<button (click)="sendMessage()">Send</button>
+@for (message of messages; track message.content) {
+  <p>{{message.content}}</p>  <!-- Affiche tous les messages -->
+}
+

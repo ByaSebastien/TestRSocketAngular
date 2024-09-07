@@ -1,0 +1,15 @@
+<div>
+  <button (click)="connect()">Connect</button>
+</div>
+<div>
+  <input type="text" [(ngModel)]="username">
+  <button (click)="register()">Register</button>
+</div>
+<div>
+  <input type="text" [(ngModel)]="target" placeholder="target user">
+  <input type="text" [(ngModel)]="message" placeholder="message">
+  <button (click)="sendMessage()">Send</button>
+</div>
+@for (msg of messages;track msg.message){
+  <p>{{msg.fromUser}} : {{msg.message}}</p>
+}

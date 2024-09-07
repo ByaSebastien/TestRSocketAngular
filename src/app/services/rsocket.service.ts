@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
   RSocketClient,
   JsonSerializer,
   IdentitySerializer,
 } from 'rsocket-core';
 import RSocketWebSocketClient from 'rsocket-websocket-client';
-import { Observable } from 'rxjs';
+import {Observable, Subject} from 'rxjs';
+import {SimpleMessage} from "../models/simple-message";
+import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +15,8 @@ import { Observable } from 'rxjs';
 export class RSocketService {
 
   private client: RSocketClient<any, any>;
+  private connection: any
+  private messageSubject: Subject<SimpleMessage> = new Subject();
 
   constructor() {
     // Configuration du client RSocket
@@ -34,25 +38,30 @@ export class RSocketService {
   }
 
   // Méthode pour envoyer un message via RSocket et recevoir une réponse
-  sendMessage(message: string): Observable<any> {
-    return new Observable((observer) => {
-      // Etablissement de la connexion avec le serveur RSocket
-      this.client.connect().subscribe({
-        onComplete: (rsocket) => {
-          // Envoi d'un message et attente d'une réponse (request-response)
-          rsocket.requestResponse({
-            data: message, // Données du message envoyées
-            metadata: String.fromCharCode('request-response'.length) + 'request-response', // Indique la route "request-response" côté serveur
-          }).subscribe({
-            onComplete: (response) => {
-              observer.next(response.data);  // Retourne la réponse du serveur au composant
-              observer.complete();
-            },
-            onError: (error) => observer.error(error), // En cas d'erreur
-          });
+  sendMessage(message: string) {
+      this.connection.requestResponse({
+        data: message, // Données du message envoyées
+        metadata: String.fromCharCode('request-response'.length) + 'request-response', // Indique la route "request-response" côté serveur
+      }).subscribe({
+        onComplete: (response: any) => {
+          this.messageSubject.next(response.data);  // Retourne la réponse du serveur au composant
         },
-        onError: (error) => observer.error(error), // Gestion des erreurs lors de la connexion
+        onError: (error: any) => console.log(error), // En cas d'erreur
       });
+  }
+
+  connect() {
+    // Etablissement de la connexion avec le serveur RSocket
+    this.client.connect().subscribe({
+      onComplete: (rsocket) => {
+        // Envoi d'un message et attente d'une réponse (request-response)
+        this.connection = rsocket;
+      },
+      onError: (error) => console.log(error), // Gestion des erreurs lors de la connexion
     });
+  }
+
+  get $messageSubject(){
+    return this.messageSubject.asObservable();
   }
 }
