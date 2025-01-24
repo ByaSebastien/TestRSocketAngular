@@ -1,0 +1,24 @@
+<button (click)="getConversations()">Get</button>
+@if (!currentUser) {
+  <form [formGroup]="authForm">
+    <input type="text" placeholder="username" formControlName="username">
+    <input type="password" placeholder="password" formControlName="password">
+    <button type="button" (click)="submitAuth('login')">Login</button>
+    <button type="button" (click)="submitAuth('register')">Register</button>
+  </form>
+}
+@if (currentUser) {
+  <p>Connected as {{ currentUser.username }}</p>
+}
+<form [formGroup]="conversationForm" (ngSubmit)="submitConversation()">
+  <input type="text" placeholder="New conversation" formControlName="title">
+  <button type="submit">Add</button>
+</form>
+<ul>
+  @for (conversation of conversations; track conversation.id) {
+    <li (click)="setConversation(conversation)">{{ conversation.title }}</li>
+  }
+</ul>
+@if (currentConversation) {
+  <app-chat-conversation [conversation]="currentConversation"></app-chat-conversation>
+}

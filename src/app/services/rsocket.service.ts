@@ -54,6 +54,7 @@ export class RSocketService {
     // Etablissement de la connexion avec le serveur RSocket
     this.client.connect().subscribe({
       onComplete: (rsocket) => {
+        console.log("connected");
         // Envoi d'un message et attente d'une réponse (request-response)
         this.connection = rsocket;
       },

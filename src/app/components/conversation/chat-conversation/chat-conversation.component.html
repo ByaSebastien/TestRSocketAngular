@@ -1,0 +1,10 @@
+<h2>Conversation {{conversation.title}}</h2>
+<ul>
+  @for (message of messages;track message){
+    <li>{{message.username}} : {{message.content}}</li>
+  }
+</ul>
+<form [formGroup]="messageForm" (ngSubmit)="sendMessage()">
+  <input type="text" placeholder="type a message" formControlName="content">
+  <button type="submit">Send</button>
+</form>

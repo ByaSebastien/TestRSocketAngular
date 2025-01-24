@@ -69,6 +69,7 @@ export class PrivateChatService {
         this.messageStream.next(response.data); // Ajoute le message reçu au flux
       },
       onSubscribe: (subscription: any) => {
+        console.log("Sub ok");
         subscription.request(2147483646);
       },
       onError: (error: any) => console.error('Erreur lors de la réception des messages :', error),

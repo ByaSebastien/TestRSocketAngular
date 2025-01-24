@@ -1,0 +1,10 @@
+<div class="chat-window">
+<!--  <div *ngFor="let message of messages$ | async" class="message">-->
+    {{ messages$|async }}
+<!--  </div>-->
+</div>
+
+<div class="input-area">
+  <input #messageInput type="text" placeholder="Entrez votre message ici" />
+  <button (click)="sendMessage(messageInput.value)">Envoyer</button>
+</div>

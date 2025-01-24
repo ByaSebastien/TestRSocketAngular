@@ -53,7 +53,6 @@ export class SimpleChatService {
     }).subscribe({
       onNext: (message: any) => {
         console.log(message);
-        message.data.content.replace('"', '',true);
         this.messageStream.next(message.data);
       },  // Ajouter chaque message reçu au flux
       onError: (error: any) => {
@@ -62,7 +61,7 @@ export class SimpleChatService {
         this.handleReconnection();
       },
       onSubscribe: (subscription: any) => {
-        console.log("sub ok")
+        console.log("sub ok");
         subscription.request(2147483646); // Max possible
         // subscription.request(10); // Limite à 10 messages à la fois
       },
